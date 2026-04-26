@@ -12,8 +12,8 @@ const CONFIG = {
 
 // Mock Data Generators
 const syscalls = [
-    'NtCreateFile', 'NtReadFile', 'NtWriteFile', 
-    'NtAllocateVirtualMemory', 'NtFreeVirtualMemory', 
+    'NtCreateFile', 'NtReadFile', 'NtWriteFile',
+    'NtAllocateVirtualMemory', 'NtFreeVirtualMemory',
     'NtOpenProcess', 'NtTerminateProcess',
     'NtDeviceIoControlFile', 'WSASocketW',
     'NtOpenKey', 'NtSetValueKey'
@@ -41,10 +41,10 @@ const statusBadge = document.getElementById('statusBadge');
 // Initialize Chart.js
 function initChart() {
     const ctx = document.getElementById('statusChart').getContext('2d');
-    
+
     Chart.defaults.color = '#a1a1aa';
     Chart.defaults.font.family = "'Inter', sans-serif";
-    
+
     statusChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -112,7 +112,7 @@ function generateCall() {
 function appendToStream(data) {
     const row = document.createElement('div');
     row.className = `syscall-row ${data.isError ? 'error-row' : ''}`;
-    
+
     const statusClass = data.status === 'SUCCESS' ? 'status-success' : 'status-error';
 
     row.innerHTML = `
@@ -129,7 +129,7 @@ function appendToStream(data) {
     if (streamContainer.children.length > CONFIG.maxRows) {
         streamContainer.removeChild(streamContainer.firstChild);
     }
-    
+
     // Auto scroll to bottom
     streamContainer.scrollTop = streamContainer.scrollHeight;
 }
@@ -137,9 +137,9 @@ function appendToStream(data) {
 function updateMetrics(data) {
     totalCalls++;
     if (data.isError) errorCalls++;
-    
+
     activeProcesses.add(data.pid);
-    
+
     // Periodically clean up old PIDs to simulate processes ending
     if (totalCalls % 50 === 0) {
         let pids = Array.from(activeProcesses);
@@ -168,11 +168,11 @@ function tick() {
 
     for (let i = 0; i < callsThisTick; i++) {
         const data = generateCall();
-        
+
         // Store for download
         logsData.push(data);
         if (logsData.length > 5000) logsData.shift(); // Keep memory somewhat bounded
-        
+
         appendToStream(data);
         updateMetrics(data);
     }
@@ -184,22 +184,22 @@ function tick() {
 // Event Listeners
 toggleBtn.addEventListener('click', () => {
     isRunning = !isRunning;
-    
+
     if (isRunning) {
         toggleBtn.textContent = 'Stop Monitoring';
         toggleBtn.className = 'btn btn-primary';
-        
+
         statusBadge.className = 'badge status-live';
         statusBadge.textContent = 'LIVE MONITORING';
         liveIndicator.className = 'pulse-ring';
-        
+
         tick(); // Restart loop
     } else {
         toggleBtn.textContent = 'Start Monitoring';
         toggleBtn.className = 'btn btn-secondary';
-        
+
         clearTimeout(streamInterval);
-        
+
         statusBadge.className = 'badge status-paused';
         statusBadge.textContent = 'PAUSED';
         liveIndicator.className = 'pulse-ring paused';
@@ -211,7 +211,7 @@ downloadBtn.addEventListener('click', () => {
         alert("No logs to download yet.");
         return;
     }
-    
+
     // Create text report
     let reportContent = "OS System Call Analyzer Report\n";
     reportContent += `Generated: ${getCurrentTimeStr()}\n`;
@@ -219,21 +219,21 @@ downloadBtn.addEventListener('click', () => {
     reportContent += "------------------------------------------------------\n";
     reportContent += "TIME\t\t\tPID\t\tSTATUS\t\tCALL NAME\n";
     reportContent += "------------------------------------------------------\n";
-    
+
     logsData.forEach(log => {
         reportContent += `${log.time}\t${log.pid}\t${log.status}\t\t${log.syscall}\n`;
     });
-    
+
     // Trigger download
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement('a');
     a.href = url;
     a.download = `syscall_report_${Date.now()}.txt`;
     document.body.appendChild(a);
     a.click();
-    
+
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 });
@@ -241,18 +241,18 @@ downloadBtn.addEventListener('click', () => {
 // Initialization
 function init() {
     initChart();
-    
+
     // Generate initial set of data
     let tempRunning = isRunning;
     isRunning = false;
-    for(let i=0; i<10; i++) {
+    for (let i = 0; i < 10; i++) {
         const data = generateCall();
         logsData.push(data);
         appendToStream(data);
         updateMetrics(data);
     }
     isRunning = tempRunning;
-    
+
     // Start main loop
     tick();
 }
