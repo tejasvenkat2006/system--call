@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS System Call Analyzer - SDG 16 Dashboard</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="OS System Call Analyzer Dashboard - Tracking and displaying system calls to promote transparency and accountability aligned with SDG 16.">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="glass-panel main-header">
+            <div class="logo-area">
+                <div class="pulse-ring" id="liveIndicator"></div>
+                <h1>OS System Call Analyzer</h1>
+                <span class="badge status-live" id="statusBadge">LIVE MONITORING</span>
+            </div>
+            <div class="sdg-badge-container" title="Aligned with UN Sustainable Development Goal 16">
+                <div class="sdg-logo">SDG 16</div>
+                <div class="sdg-text">Peace, Justice &<br>Strong Institutions</div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Column: Live Data Stream -->
+            <section class="glass-panel live-stream-panel">
+                <div class="panel-header">
+                    <h2>Live Logs Table</h2>
+                    <div class="controls">
+                        <button id="toggleBtn" class="btn btn-primary">Stop Monitoring</button>
+                        <button id="downloadBtn" class="btn btn-secondary">Download Report</button>
+                    </div>
+                </div>
+                <div class="table-header">
+                    <span class="col-time">Time</span>
+                    <span class="col-pid">PID</span>
+                    <span class="col-syscall">Call Name</span>
+                    <span class="col-status">Status</span>
+                </div>
+                <div class="stream-container" id="streamContainer">
+                    <!-- Javascript will inject rows here -->
+                </div>
+            </section>
+
+            <!-- Right Column: Analytics & Context -->
+            <aside class="analytics-column">
+                
+                <!-- Metrics -->
+                <section class="glass-panel metrics-panel">
+                    <h2>Dashboard Features</h2>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <span class="metric-title">Total System Calls</span>
+                            <span class="metric-value text-blue" id="metricTotal">0</span>
+                        </div>
+                        <div class="metric-card alert-metric">
+                            <span class="metric-title">Error Calls</span>
+                            <span class="metric-value text-red" id="metricError">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">Active Processes</span>
+                            <span class="metric-value text-green" id="metricActive">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Success vs Error Calls</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SDG 16 Context -->
+                <section class="glass-panel sdg-context-panel">
+                    <h2>Mission: SDG 16 Alignment</h2>
+                    <p class="mission-text">
+                        This tool promotes <strong>Peace, Justice, and Strong Institutions</strong> by enforcing transparency at the Operating System level.
+                    </p>
+                    <ul class="sdg-benefits">
+                        <li>
+                            <span class="icon">🔍</span>
+                            <div>
+                                <strong>Transparency</strong>
+                                <span>Uncover hidden software behaviors and background data access.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">🛡️</span>
+                            <div>
+                                <strong>Accountability</strong>
+                                <span>Hold applications accountable for unauthorized resource usage.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
